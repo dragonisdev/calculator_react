@@ -15,18 +15,133 @@ const btnValues = [
   [4, 5, 6, "-"],
   [1, 2, 3, "+"],
   [0, ".", "="],
-]
+];
+
+
+const removeSpaces = (currentNum) => currentNum.toString().replace(/\s/g, "");
 
 
 function App() {
-  
-const [screenValue, setScreenValue] = useState("0")
 
+const [calc, setCalc] = useState({
+  operator: "",
+  currentNum: "0",
+  result: 0,
+});
+
+const getClickHandler = (btn) => {
+  if (btn === "C") return resetClickHandler;
+  if (btn === "+-") return invertClickHandler;
+  if (btn === "%") return percentClickHandler;
+  if (btn === "=") return equalsClickHandler;
+  if (["/", "X", "-", "+"].includes(btn)) return signClickHandler;
+  if (btn === ".") return commaClickHandler;
+  return numClickHandler;
+};
+
+const resetClickHandler = () => {
+  setCalc({
+    operator: "",
+    currentNum: 0,
+    result: 0,
+  });
+};
+
+const invertClickHandler = () => {
+  setCalc((prev) => ({
+    ...prev,
+    currentNum: parseFloat(prev.currentNum) * -1,
+  }));
+};
+
+
+const percentClickHandler = () => {
+  setCalc((prev) => ({
+    ...prev,
+    currentNum: parseFloat(prev.currentNum) /100,
+  }));
+};
+
+const equalsClickHandler = () => {
+  setCalc((prev) => {
+    const { operator, result, currentNum } = prev;
+
+    const parsedCurrent = parseFloat(removeSpaces(currentNum));
+    const parsedResult = parseFloat(removeSpaces(result));
+
+    let computation = result;
+
+    switch (operator) {
+      case "+":
+        computation = parsedResult + parsedCurrent;
+        break;
+      case "-":
+        computation = parsedResult - parsedCurrent;
+        break;
+      case "X":
+        computation = parsedResult * parsedCurrent;
+        break;
+      case "/":
+        computation = parsedCurrent === 0 ? "Error" : parsedResult / parsedCurrent;
+        break;
+      default:
+        return prev;
+    }
+
+    return {
+      operator: "",
+      currentNum: "",
+      result: computation,
+    };
+  });
+};
+
+const signClickHandler = (operator) => {
+  setCalc((prev) => {
+    const current = parseFloat(removeSpaces(prev.currentNum));
+
+    return {
+      currentNum : "",
+      result: current ,
+      operator : operator,
+      
+
+    };
+  });
+};
+
+const commaClickHandler = () => {
+  setCalc(prev => {
+    
+    const currentStr = String(prev.currentNum);
+
+    if (currentStr.includes(".")) return prev;
+
+    return {
+      ...prev,
+      currentNum: prev.currentNum + ".",
+    };
+  });
+};
+
+const numClickHandler = (value) => {
+
+  setCalc((prev) => {
+
+
+    const newNum = prev.currentNum === "0" && value !=="." ? String(value) : prev.currentNum + String(value);
+
+    return {
+      ...prev,
+      currentNum: newNum,
+    };
+  });
+};
 
 
   return (
     <Wrapper>
-      <Screen value={screenValue}/>
+      <Screen value={calc.currentNum !== "" ? calc.currentNum : calc.result}/>
       <ButtonBox>
         {
           btnValues.flat().map((value, i) => {
@@ -36,12 +151,13 @@ const [screenValue, setScreenValue] = useState("0")
               className={value === "=" ? "equals" : ""}
               value={value}
               onClick={() => {
-                
-                console.log(`${value} clicked`)
+                console.log(value);
+                const handler = getClickHandler(value);
+                handler(value);
               }}
-              
 
-            />)
+
+            />);
           })
         }
 
