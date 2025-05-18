@@ -1,14 +1,72 @@
 .wrapper {
-    width: 340px;
-    height: 540px;
-    padding: 10px;
-    border-radius: 10px;
-    background-color: #485461;
-    background-image: linear-gradient(315deg, #485461 0%, #28313b 74%);
-    transition: all 0.5s;
-  
+  width: 90vw;      
+  max-width: 340px;  
+  height: 90vh;      
+  max-height: 540px; 
+  padding: 20px;   
+  border-radius: 15px;
+  background: linear-gradient(135deg, #1a1a2e, #16213e);
+  box-shadow:
+    0 0 12px 2px rgba(80, 60, 209, 0.7),
+    inset 0 0 8px 1px rgba(120, 90, 255, 0.3);
+  transition: transform 0.3s ease;
 }
 
 .wrapper:hover {
     transform: translateY(-4px);
+}
+
+@media (max-width: 400px) {
+  .wrapper {
+    height: 80vh;
+  }
+}
+
+
+.screen {
+  height: 15vh;
+  max-height: 100px;
+  width: 100%;
+  margin-bottom: 15px;
+  padding: 0 20px;
+  background-color: #1b1b2f;
+  border-radius: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  font-weight: 700;
+  font-size: 7vw;  
+  color: #9a94ff;
+  letter-spacing: 1.5px;
+  box-shadow:
+    0 0 10px 2px rgba(154, 148, 255, 0.5),
+    inset 0 -4px 10px 0 rgba(255, 255, 255, 0.1);
+  user-select: none;
+}
+
+
+.buttonBox {
+  width: 100%;
+  height: calc(100% - 18vh);
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(5, 1fr);
+  gap: 12px;
+}
+
+
+button {
+  font-size: 5vw;  
+  border-radius: 12px;
+  box-shadow:
+    0 3px 6px rgba(78, 62, 230, 0.5),
+    inset 0 -3px 6px rgba(110, 90, 255, 0.7);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+
+@media (max-width: 400px) {
+  button {
+    font-size: 6vw;
+  }
 }
