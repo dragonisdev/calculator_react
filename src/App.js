@@ -151,10 +151,9 @@ const numClickHandler = (value) => {
   setCalc((prev) => {
 
 
-    const newNum = prev.currentNum === "0" && value !=="." 
-      ? String(value) 
+    const newNum = prev.currentNum === "0" && value !=="."
+      ? String(value)
       : prev.currentNum + String(value);
-
 
     return {
       ...prev,
