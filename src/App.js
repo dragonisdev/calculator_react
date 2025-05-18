@@ -25,7 +25,7 @@ function App() {
 
 const [calc, setCalc] = useState({
   operator: "",
-  currentNum: "0",
+  currentNum: "",
   result: 0,
 });
 
@@ -42,7 +42,7 @@ const getClickHandler = (btn) => {
 const resetClickHandler = () => {
   setCalc({
     operator: "",
-    currentNum: 0,
+    currentNum: "0",
     result: 0,
   });
 };
@@ -96,23 +96,45 @@ const equalsClickHandler = () => {
   });
 };
 
-const signClickHandler = (operator) => {
+const signClickHandler = (nextOperator) => {
   setCalc((prev) => {
-    const current = parseFloat(removeSpaces(prev.currentNum));
+    const { operator, currentNum, result } = prev;
+    const current = parseFloat(removeSpaces(currentNum));
+    const res = parseFloat(removeSpaces(result));
+
+    let newResult = res;
+
+    if (operator && currentNum !== "") {
+      switch (operator) {
+        case "+":
+          newResult = res + current;
+          break;
+        case "-":
+          newResult = res - current;
+          break;
+        case "X":
+          newResult = res * current;
+          break;
+        case "/":
+          newResult = current === 0 ? "Error" : res / current;
+          break;
+        default:
+          newResult = current;
+      }
+    } else if (currentNum !== "") {
+      newResult = current;
+    }
 
     return {
-      currentNum : "",
-      result: current ,
-      operator : operator,
-      
-
+      operator: nextOperator,
+      result: newResult,
+      currentNum: "",
     };
   });
 };
 
 const commaClickHandler = () => {
   setCalc(prev => {
-    
     const currentStr = String(prev.currentNum);
 
     if (currentStr.includes(".")) return prev;
@@ -129,7 +151,10 @@ const numClickHandler = (value) => {
   setCalc((prev) => {
 
 
-    const newNum = prev.currentNum === "0" && value !=="." ? String(value) : prev.currentNum + String(value);
+    const newNum = prev.currentNum === "0" && value !=="." 
+      ? String(value) 
+      : prev.currentNum + String(value);
+
 
     return {
       ...prev,
@@ -155,8 +180,6 @@ const numClickHandler = (value) => {
                 const handler = getClickHandler(value);
                 handler(value);
               }}
-
-
             />);
           })
         }
